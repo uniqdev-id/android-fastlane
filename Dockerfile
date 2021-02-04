@@ -51,5 +51,5 @@ RUN curl -sL firebase.tools | bash
 
 # Download Flutter SDK
 RUN git clone https://github.com/flutter/flutter.git
-ENV PATH "$PATH:/home/developer/flutter/bin"
+ENV PATH "$PATH:${ANDROID_HOME}/flutter/bin"
 RUN flutter doctor
