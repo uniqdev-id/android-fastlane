@@ -50,6 +50,7 @@ RUN curl -sL firebase.tools | bash
 # RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
+WORKDIR /home/developer
 RUN git clone https://github.com/flutter/flutter.git
-ENV PATH "$PATH:${ANDROID_HOME}/flutter/bin"
-RUN ${ANDROID_HOME}/flutter/bin/flutter doctor
+ENV PATH "$PATH:/home/developer/flutter/bin"
+RUN flutter doctor
