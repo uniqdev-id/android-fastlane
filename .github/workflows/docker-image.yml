@@ -33,4 +33,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: uniqdev/android-fastlane-flutter:latest
+          tags: uniqdev/android-fastlane:flutter
