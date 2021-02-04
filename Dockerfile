@@ -48,3 +48,8 @@ RUN apt-get update && \
 RUN curl -sL firebase.tools | bash
 
 # RUN fastlane add_plugin firebase_app_distribution
+
+# Download Flutter SDK
+RUN git clone https://github.com/flutter/flutter.git
+ENV PATH "$PATH:/home/developer/flutter/bin"
+RUN flutter doctor
