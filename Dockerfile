@@ -54,4 +54,5 @@ WORKDIR /home/developer
 RUN git clone https://github.com/flutter/flutter.git
 ENV PATH "$PATH:/home/developer/flutter/bin"
 RUN flutter doctor
+
 #RUN flutter --version
