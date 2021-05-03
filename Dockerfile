@@ -51,7 +51,7 @@ RUN curl -sL firebase.tools | bash
 
 # Download Flutter SDK
 WORKDIR /home/developer
-RUN git clone -b master https://github.com/flutter/flutter.git
+RUN git clone -b stable https://github.com/flutter/flutter.git
 RUN ./flutter/bin/flutter --version
 
 ENV PATH "$PATH:/home/developer/flutter/bin"
