@@ -35,7 +35,9 @@ RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
-RUN cp -a $ANDROID_HOME/cmdline-tools/. $ANDROID_HOME/cmdline-tools/latest/
+RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
+RUN ls -al $ANDROID_HOME
+RUN cp -r $ANDROID_HOME/cmdline-tools/. $ANDROID_HOME/cmdline-tools/latest/
 RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
 
 RUN echo "Print sdkmanager version"
