@@ -12,6 +12,9 @@ ENV VERSION_SDK_TOOLS "7583922_latest"
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
+https://dl.google.com/android/repository/sdk-tools-linux-7583922_latest.zip
+https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip
+
 # install OS packages
 RUN apt-get --quiet update --yes
 RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
@@ -19,7 +22,10 @@ RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-esse
 RUN apt-get --quiet install --yes vim-common
 
 # install Android SDK
-RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
+# RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
+#     unzip /sdk.zip -d /sdk && \
+#     rm -v /sdk.zip
+RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d /sdk && \
     rm -v /sdk.zip
 
