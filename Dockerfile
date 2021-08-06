@@ -39,7 +39,7 @@ RUN echo "Print sdkmanager version"
 # RUN ${ANDROID_HOME}/tools/bin/sdkmanager --version
 
 #RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
-RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager "platforms;android-30"
+RUN yes | /sdk/tools/bin/sdkmanager "platforms;android-30"
 
 ADD packages.txt /sdk
 RUN mkdir -p /root/.android && \
