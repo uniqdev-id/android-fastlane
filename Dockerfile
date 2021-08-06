@@ -36,7 +36,7 @@ ADD licenses/* $ANDROID_HOME/licenses
 RUN ls -al $ANDROID_HOME/licenses
 
 RUN echo "Print sdkmanager version"
-RUN ${ANDROID_HOME}/tools/bin/sdkmanager --version
+# RUN ${ANDROID_HOME}/tools/bin/sdkmanager --version
 
 #RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager "platforms;android-30"
