@@ -32,8 +32,8 @@ RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VE
 #   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
 RUN mkdir -p $ANDROID_HOME/licenses/
-RUN cp licenses/android-sdk-license $ANDROID_HOME/licenses/android-sdk-license \
-    && cp licenses/android-sdk-preview-license $ANDROID_HOME/licenses/android-sdk-preview-license
+ADD licenses/* $ANDROID_HOME/licenses
+RUN ls -al $ANDROID_HOME/licenses
 
 #RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
 RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
