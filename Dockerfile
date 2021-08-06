@@ -34,23 +34,21 @@ RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VE
 RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses
 RUN ls -al $ANDROID_HOME/licenses
-RUN ls -al /sdk
-RUN ls -al /sdk/cmdline-tools
-RUN ls -al /sdk/cmdline-tools/bin
+RUN ls -al $ANDROID_HOME/cmdline-tools/bin
 
 RUN echo "Print sdkmanager version"
-# RUN ${ANDROID_HOME}/tools/bin/sdkmanager --version
+RUN $ANDROID_HOME/cmdline-tools/bin/sdkmanager --version
 
 #RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
-RUN yes | /sdk/tools/bin/sdkmanager "platforms;android-30"
+RUN yes | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
 
 ADD packages.txt /sdk
 RUN mkdir -p /root/.android && \
   touch /root/.android/repositories.cfg && \
-  ${ANDROID_HOME}/tools/bin/sdkmanager --update
+  ${ANDROID_HOME}/cmdline-tools/bin/sdkmanager --update
 
 RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
-    ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
+    ${ANDROID_HOME}/cmdline-tools/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
 #COPY Gemfile.lock .
