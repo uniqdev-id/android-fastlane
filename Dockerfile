@@ -12,8 +12,6 @@ ENV VERSION_SDK_TOOLS "7583922_latest"
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
-https://dl.google.com/android/repository/sdk-tools-linux-7583922_latest.zip
-https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip
 
 # install OS packages
 RUN apt-get --quiet update --yes
