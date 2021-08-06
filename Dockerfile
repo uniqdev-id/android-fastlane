@@ -35,7 +35,7 @@ RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses
 RUN ls -al $ANDROID_HOME/licenses
 
-echo "Print sdkmanager version"
+RUN echo "Print sdkmanager version"
 $ANDROID_HOME/tools/bin/sdkmanager --version
 
 #RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
