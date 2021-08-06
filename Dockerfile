@@ -35,8 +35,8 @@ RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses
 RUN ls -al $ANDROID_HOME/licenses
 RUN ls -al /sdk
-RUN ls -al /sdk/tools
-RUN ls -al /sdk/tools/bin
+RUN ls -al /sdk/cmdline-tools
+RUN ls -al /sdk/cmdline-tools/bin
 
 RUN echo "Print sdkmanager version"
 # RUN ${ANDROID_HOME}/tools/bin/sdkmanager --version
