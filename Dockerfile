@@ -40,7 +40,7 @@ COPY Gemfile.lock .
 COPY Gemfile .
 #RUN gem install bundle
 RUN gem install bundler
-RUN bundle install
+#RUN bundle install
 
 RUN apt-get update && \
       apt-get -y install sudo
@@ -52,7 +52,9 @@ RUN curl -sL firebase.tools | bash
 
 # Download Flutter SDK
 WORKDIR /home/developer
-RUN git clone -b stable https://github.com/flutter/flutter.git
+#RUN git clone -b stable https://github.com/flutter/flutter.git
+RUN git clone -b 2.2.3 https://github.com/flutter/flutter.git
+#https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
 ENV PATH "$PATH:/home/developer/flutter/bin"
