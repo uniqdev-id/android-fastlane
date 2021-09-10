@@ -36,9 +36,10 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
-#COPY Gemfile.lock .
+COPY Gemfile.lock .
 COPY Gemfile .
-RUN gem install bundle
+#RUN gem install bundle
+RUN gem install bundler
 RUN bundle install
 
 RUN apt-get update && \
