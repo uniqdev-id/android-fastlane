@@ -48,7 +48,8 @@ RUN apt-get update && \
 #install firebase cli
 RUN curl -sL firebase.tools | bash
 
-# RUN fastlane add_plugin firebase_app_distribution
+# install plugins
+RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
 WORKDIR /home/developer
