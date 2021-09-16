@@ -41,6 +41,7 @@ COPY Gemfile .
 #RUN gem install bundle
 RUN gem install bundler
 #RUN bundle install
+RUN bundle update
 
 RUN apt-get update && \
       apt-get -y install sudo
@@ -49,7 +50,7 @@ RUN apt-get update && \
 RUN curl -sL firebase.tools | bash
 
 # install plugins
-RUN fastlane add_plugin firebase_app_distribution
+#RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
 WORKDIR /home/developer
