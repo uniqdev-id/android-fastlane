@@ -39,7 +39,8 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
 COPY Gemfile.lock .
 COPY Gemfile .
 #RUN gem install bundle
-RUN gem install bundler
+# RUN gem install bundler
+RUN gem install bundler:1.17.3
 #RUN bundle install
 RUN bundle update
 
