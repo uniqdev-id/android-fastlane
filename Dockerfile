@@ -57,10 +57,12 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
-#COPY Gemfile.lock .
+COPY Gemfile.lock .
 COPY Gemfile .
-RUN gem install bundle
-RUN bundle install
+# RUN gem install bundle
+RUN gem install bundler:1.17.3
+# RUN bundle install
+RUN bundle update
 
 RUN apt-get update && \
       apt-get -y install sudo
