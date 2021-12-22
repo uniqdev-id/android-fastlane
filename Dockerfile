@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM openjdk:11.0-jdk
 
 # Just matched `app/build.gradle`
 ENV ANDROID_COMPILE_SDK "28"
