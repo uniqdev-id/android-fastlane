@@ -6,7 +6,8 @@ ENV ANDROID_COMPILE_SDK "28"
 ENV ANDROID_BUILD_TOOLS "29.0.2"
 # Version from https://developer.android.com/studio/releases/sdk-tools
 ENV ANDROID_SDK_TOOLS "24.4.1"
-ENV VERSION_SDK_TOOLS "4333796"
+# ENV VERSION_SDK_TOOLS "4333796"
+ENV VERSION_SDK_TOOLS "7583922_latest"
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
@@ -17,15 +18,32 @@ RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-esse
 RUN apt-get --quiet install --yes vim-common
 
 # install Android SDK
-RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
+# RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
+#     unzip /sdk.zip -d /sdk && \
+#     rm -v /sdk.zip
+RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d /sdk && \
     rm -v /sdk.zip
 
-RUN mkdir -p $ANDROID_HOME/licenses/ \
-  && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
-  && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
-RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
+# RUN mkdir -p $ANDROID_HOME/licenses/ \
+#   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
+#   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
+
+RUN mkdir -p $ANDROID_HOME/licenses/
+ADD licenses/* $ANDROID_HOME/licenses
+
+#accept licenses
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
+RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
+RUN ls -al $ANDROID_HOME
+RUN mkdir /tools
+RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
+RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
+RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
+
+# RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
+RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
 ADD packages.txt /sdk
 RUN mkdir -p /root/.android && \
