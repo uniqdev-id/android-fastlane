@@ -66,8 +66,8 @@ COPY Gemfile .
 #RUN gem install bundle
 # RUN gem install bundler
 RUN gem install bundler:1.17.3
-#RUN bundle install
 RUN bundle update
+RUN bundle install
 
 RUN apt-get update && \
       apt-get -y install sudo
