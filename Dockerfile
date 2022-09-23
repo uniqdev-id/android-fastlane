@@ -98,3 +98,9 @@ RUN apt-get update && apt-get install -y tailscale
 RUN apt-get install -y jq
 
 ENV PATH="${PATH}:/home/developer/flutter/bin:/sdk/platform-tools"
+
+
+#update directory permission
+RUN mkdir -p /root/.pub-cache/
+RUN chmod 775 /root/.pub-cache/
+RUN chmod 775 /home/developer/flutter/ 
