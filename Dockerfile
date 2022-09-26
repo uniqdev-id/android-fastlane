@@ -81,7 +81,7 @@ RUN curl -sL firebase.tools | bash
 # Download Flutter SDK
 WORKDIR /home/developer
 #RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.0.2 https://github.com/flutter/flutter.git
+RUN git clone -b 3.3.2 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
