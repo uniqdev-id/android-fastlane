@@ -11,6 +11,8 @@ ENV VERSION_SDK_TOOLS "7583922_latest"
 ENV ANDROID_HOME "/workspace/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
+RUN mkdir -p $ANDROID_HOME
+
 # install OS packages
 RUN apt-get --quiet update --yes
 RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
