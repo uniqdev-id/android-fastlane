@@ -8,7 +8,7 @@ ENV ANDROID_BUILD_TOOLS "29.0.2"
 ENV ANDROID_SDK_TOOLS "24.4.1"
 # ENV VERSION_SDK_TOOLS "4333796"
 ENV VERSION_SDK_TOOLS "7583922_latest"
-ENV ANDROID_HOME "/sdk"
+ENV ANDROID_HOME "/workspace/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 # install OS packages
@@ -22,7 +22,7 @@ RUN apt-get --quiet install --yes vim-common
 #     unzip /sdk.zip -d /sdk && \
 #     rm -v /sdk.zip
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
-    unzip /sdk.zip -d /sdk && \
+    unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
 
@@ -45,7 +45,7 @@ RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
 # RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-ADD packages.txt /sdk
+ADD packages.txt $ANDROID_HOME
 # RUN mkdir -p /root/.android && \
 #   touch /root/.android/repositories.cfg && \
 #   ${ANDROID_HOME}/tools/bin/sdkmanager --update
@@ -54,10 +54,10 @@ RUN mkdir -p /root/.android && \
   touch /root/.android/repositories.cfg && \
   ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --update
 
-# RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
+# RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
 #     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
 
-RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
+RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
@@ -79,13 +79,13 @@ RUN curl -sL firebase.tools | bash
 #RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
-WORKDIR /home/developer
+WORKDIR /workspace
 #RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.0.2 https://github.com/flutter/flutter.git
+RUN git clone -b 3.3.2 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
-ENV PATH "$PATH:/home/developer/flutter/bin"
+ENV PATH "$PATH:/workspace/flutter/bin"
 RUN flutter doctor
 
 #RUN flutter --version
@@ -97,10 +97,10 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyri
 RUN apt-get update && apt-get install -y tailscale     
 RUN apt-get install -y jq
 
-ENV PATH="${PATH}:/home/developer/flutter/bin:/sdk/platform-tools"
+ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
 
 #update directory permission
 RUN mkdir -p /root/.pub-cache/
-RUN chmod 775 /root/.pub-cache/
-RUN chmod 775 /home/developer/flutter/ 
+RUN chmod -R 775 /root/.pub-cache/
+RUN chmod -R 775 /workspace/flutter/ 
