@@ -8,7 +8,7 @@ ENV ANDROID_BUILD_TOOLS "29.0.2"
 ENV ANDROID_SDK_TOOLS "24.4.1"
 # ENV VERSION_SDK_TOOLS "4333796"
 ENV VERSION_SDK_TOOLS "7583922_latest"
-ENV ANDROID_HOME "/workspace/sdk"
+ENV ANDROID_HOME "/home/gitpod/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
