@@ -11,6 +11,9 @@ ENV VERSION_SDK_TOOLS "7583922_latest"
 ENV ANDROID_HOME "/workspace/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
+RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+USER gitpod
+
 RUN mkdir -p $ANDROID_HOME
 
 # install OS packages
@@ -81,13 +84,13 @@ RUN curl -sL firebase.tools | bash
 #RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
-WORKDIR /workspace
+WORKDIR /home/gitpod
 #RUN git clone -b stable https://github.com/flutter/flutter.git
 RUN git clone -b 3.3.2 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
-ENV PATH "$PATH:/workspace/flutter/bin"
+ENV PATH "$PATH:/home/gitpod/flutter/bin"
 RUN flutter doctor
 
 #RUN flutter --version
@@ -103,6 +106,6 @@ ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
 
 #update directory permission
-RUN mkdir -p /root/.pub-cache/
-RUN chmod -R 775 /root/.pub-cache/
-RUN chmod -R 775 /workspace/flutter/ 
+# RUN mkdir -p /root/.pub-cache/
+# RUN chmod -R 775 /root/.pub-cache/
+# RUN chmod -R 775 /workspace/flutter/ 
