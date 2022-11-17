@@ -62,7 +62,7 @@ RUN mkdir -p /root/.android && \
 # RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
 #     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
 
-RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
+RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID_HOME/packages.txt && \
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
@@ -86,7 +86,7 @@ RUN curl -sL firebase.tools | bash
 # Download Flutter SDK
 WORKDIR /home/gitpod
 #RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.3.2 https://github.com/flutter/flutter.git
+RUN git clone -b 3.3.7 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
@@ -102,7 +102,7 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyri
 RUN apt-get update && apt-get install -y tailscale     
 RUN apt-get install -y jq
 
-ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
+# ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
 
 #update directory permission
