@@ -1,18 +1,15 @@
 FROM openjdk:11.0-jdk
 
-# Just matched `app/build.gradle`
-ENV ANDROID_COMPILE_SDK "28"
+# Just matched `app/build.gradle` | 33
+ENV ANDROID_COMPILE_SDK "28" 
 # Just matched `app/build.gradle`
 ENV ANDROID_BUILD_TOOLS "29.0.2"
 # Version from https://developer.android.com/studio/releases/sdk-tools
 ENV ANDROID_SDK_TOOLS "24.4.1"
-# ENV VERSION_SDK_TOOLS "4333796"
-ENV VERSION_SDK_TOOLS "7583922_latest"
+# ENV VERSION_SDK_TOOLS "4333796" | 7583922_latest | 9123335_latest 
+ENV VERSION_SDK_TOOLS "9123335_latest"
 ENV ANDROID_HOME "/home/gitpod/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
-
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
-USER gitpod
 
 RUN mkdir -p $ANDROID_HOME
 
@@ -26,6 +23,8 @@ RUN apt-get --quiet install --yes vim-common
 # RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
 #     unzip /sdk.zip -d /sdk && \
 #     rm -v /sdk.zip
+
+#https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
@@ -36,7 +35,7 @@ RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VE
 #   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
 RUN mkdir -p $ANDROID_HOME/licenses/
-ADD licenses/* $ANDROID_HOME/licenses
+ADD licenses/* $ANDROID_HOME/licenses/
 
 #accept licenses
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
@@ -66,13 +65,17 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
-COPY Gemfile.lock .
+RUN gem install bundler
+# COPY Gemfile.lock .
 COPY Gemfile .
 #RUN gem install bundle
 # RUN gem install bundler
-RUN gem install bundler:1.17.3
+# RUN gem install bundler:1.17.3
 RUN bundle update
-RUN bundle install
+# RUN bundle install
+
+RUN ls -al 
+# COPY Gemfile.lock .
 
 RUN apt-get update && \
       apt-get -y install sudo
@@ -91,9 +94,8 @@ RUN git clone -b 3.3.7 https://github.com/flutter/flutter.git
 RUN ./flutter/bin/flutter --version
 
 ENV PATH "$PATH:/home/gitpod/flutter/bin"
-RUN flutter doctor
-
-#RUN flutter --version
+# RUN flutter doctor
+RUN flutter --version
 
 
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
@@ -104,6 +106,8 @@ RUN apt-get install -y jq
 
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
+# RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+# USER gitpod
 
 #update directory permission
 # RUN mkdir -p /root/.pub-cache/
