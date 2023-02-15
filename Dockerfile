@@ -89,7 +89,7 @@ RUN curl -sL firebase.tools | bash
 # Download Flutter SDK
 WORKDIR /home/gitpod
 #RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.3.7 https://github.com/flutter/flutter.git
+RUN git clone -b 3.7.3 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
@@ -97,7 +97,7 @@ ENV PATH "$PATH:/home/gitpod/flutter/bin"
 # RUN flutter doctor
 RUN flutter --version
 
-
+# install tailscale for networking
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
 
@@ -106,8 +106,11 @@ RUN apt-get install -y jq
 
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
-# RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
-# USER gitpod
+# Create the gitpod user. UID must be 33333.
+RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+
+RUN chown -R gitpod /home/gitpod/
+USER gitpod
 
 #update directory permission
 # RUN mkdir -p /root/.pub-cache/
