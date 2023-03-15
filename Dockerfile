@@ -1,7 +1,8 @@
 FROM gitpod/workspace-full-vnc
 
-RUN sudo apt update && \ 
-    sudo apt install default-jdk -y -q
+USER root
+RUN apt update && \ 
+    apt install default-jdk -y -q
 
 RUN java -version
 
@@ -20,6 +21,7 @@ ENV ANDROID_STUDIO_VERSION=""
 ARG ANDROID_STUDIO_URL=https://dl.google.com/dl/android/studio/ide-zips/4.0.0.16/android-studio-ide-193.6514223-linux.tar.gz
 
 RUN mkdir -p $ANDROID_HOME
+RUN mkdir -p $ANDROID_STUDIO_HOME
 
 # install OS packages
 RUN apt-get --quiet update --yes
@@ -112,7 +114,7 @@ RUN apt-get install -y jq
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
 # Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+# RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
 RUN chown -R gitpod /home/gitpod/
 USER gitpod
