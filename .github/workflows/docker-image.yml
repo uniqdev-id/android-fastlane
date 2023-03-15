@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ flutter-gitpod ]
+    branches: [ android-vnc ]
   pull_request:
-    branches: [ flutter-gitpod ]
+    branches: [ android-vnc ]
 
 jobs:
 
