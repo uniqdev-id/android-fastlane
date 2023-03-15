@@ -1,4 +1,9 @@
-FROM openjdk:11.0-jdk
+FROM gitpod/workspace-full-vnc
+
+RUN sudo apt update && \ 
+    sudo apt install default-jdk -y -q
+
+RUN java -version
 
 # Just matched `app/build.gradle` | 33
 ENV ANDROID_COMPILE_SDK "28" 
@@ -9,7 +14,10 @@ ENV ANDROID_SDK_TOOLS "24.4.1"
 # ENV VERSION_SDK_TOOLS "4333796" | 7583922_latest | 9123335_latest 
 ENV VERSION_SDK_TOOLS "9123335_latest"
 ENV ANDROID_HOME "/home/gitpod/sdk"
+ENV ANDROID_STUDIO_HOME "/home/gitpod/android-studio"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
+ENV ANDROID_STUDIO_VERSION=""
+ARG ANDROID_STUDIO_URL=https://dl.google.com/dl/android/studio/ide-zips/4.0.0.16/android-studio-ide-193.6514223-linux.tar.gz
 
 RUN mkdir -p $ANDROID_HOME
 
@@ -83,19 +91,14 @@ RUN apt-get update && \
 #install firebase cli
 RUN curl -sL firebase.tools | bash
 
+#install android studio
+#check latest version: https://developer.android.com/studio/archive
+RUN wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2022.1.1.21/android-studio-2022.1.1.21-linux.tar.gz
+RUN tar xvfz android-studio-*.tar.gz -C $ANDROID_STUDIO_HOME
+ENV PATH "$PATH:$ANDROID_STUDIO_HOME"
+
 # install plugins
 #RUN fastlane add_plugin firebase_app_distribution
-
-# Download Flutter SDK
-WORKDIR /home/gitpod
-#RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.7.3 https://github.com/flutter/flutter.git
-#https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
-RUN ./flutter/bin/flutter --version
-
-ENV PATH "$PATH:/home/gitpod/flutter/bin"
-# RUN flutter doctor
-RUN flutter --version
 
 # install tailscale for networking
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
@@ -103,6 +106,8 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyri
 
 RUN apt-get update && apt-get install -y tailscale     
 RUN apt-get install -y jq
+
+
 
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
