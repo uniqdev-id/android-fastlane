@@ -16,7 +16,7 @@ to speed up the build process, you can cache the following directories:
 you can build/run app using this docker image on your local computer as well,        
 
 ```
-docker run -t -v /workspace/flutter-cache/.pub-cache:/home/gitpod/.pub-cache -v  /workspace/flutter-cache/cache:/home/gitpod/flutter/bin/cache -w /app -v ${PWD}:/app/ gitpod flutter build apk --release
+docker run -t -v /workspace/flutter-cache/.pub-cache:/home/gitpod/.pub-cache -v  /workspace/flutter-cache/cache:/home/gitpod/flutter/bin/cache -w /app -v ${PWD}:/app/ uniqdev/android-fastlane:flutter-gitpod-jdk11-latest flutter build apk --release
 ```     
 
 note:      
