@@ -7,8 +7,8 @@ ENV ANDROID_BUILD_TOOLS "29.0.2"
 # Version from https://developer.android.com/studio/releases/sdk-tools
 ENV ANDROID_SDK_TOOLS "24.4.1"
 # ENV VERSION_SDK_TOOLS "4333796"
-ENV VERSION_SDK_TOOLS "7583922_latest"
-ENV ANDROID_HOME "/home/gitpod/sdk"
+    ENV VERSION_SDK_TOOLS "7583922_latest"
+ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools"
 
 # install OS packages
@@ -89,10 +89,3 @@ ENV PATH "$PATH:/home/gitpod/developer/flutter/bin"
 RUN flutter doctor
 
 #RUN flutter --version
-
-# Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
-
-RUN chown -R gitpod /home/gitpod/
-RUN chown -R gitpod /sdk
-USER gitpod
