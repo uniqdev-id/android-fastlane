@@ -91,8 +91,8 @@ RUN flutter doctor
 #RUN flutter --version
 
 # Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+# RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
-RUN chown -R gitpod /home/gitpod/
-RUN chown -R gitpod /sdk/
-USER gitpod
+# RUN chown -R gitpod /home/gitpod/
+# RUN chown -R gitpod /sdk/
+# USER gitpod
