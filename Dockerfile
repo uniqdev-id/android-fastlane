@@ -81,18 +81,18 @@ RUN curl -sL firebase.tools | bash
 # Download Flutter SDK
 WORKDIR /home/gitpod/developer
 #RUN git clone -b stable https://github.com/flutter/flutter.git
-RUN git clone -b 3.16.8 https://github.com/flutter/flutter.git
+RUN git clone -b 3.7.5 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
 ENV PATH "$PATH:/home/gitpod/developer/flutter/bin"
-RUN flutter doctor
+# RUN flutter doctor
 
 #RUN flutter --version
 
 # Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+# RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
-RUN chown -R gitpod /home/gitpod/
-RUN chown -R gitpod /sdk/
-USER gitpod
+# RUN chown -R gitpod /home/gitpod/
+# RUN chown -R gitpod /sdk/
+# USER gitpod
