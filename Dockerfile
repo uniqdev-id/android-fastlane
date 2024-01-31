@@ -1,5 +1,5 @@
 #openjdk:8-jdk
-FROM openjdk:11.0-jdk
+FROM openjdk:11.0-jdk-slim
 
 # Just matched `app/build.gradle`
 ENV ANDROID_COMPILE_SDK "28"
@@ -15,21 +15,15 @@ ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 # install OS packages
 RUN apt-get --quiet update --yes
-RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
+RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev curl sudo jq 
 # We use this for xxd hex->binary
 RUN apt-get --quiet install --yes vim-common
 
 # install Android SDK
-# RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
-#     unzip /sdk.zip -d /sdk && \
-#     rm -v /sdk.zip
+
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d /sdk && \
     rm -v /sdk.zip
-
-# RUN mkdir -p $ANDROID_HOME/licenses/ \
-#   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
-#   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
 RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses
@@ -40,12 +34,9 @@ RUN ls -al $ANDROID_HOME
 RUN mkdir /tools
 RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
 RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
-RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
 
 RUN echo "Print sdkmanager version"
 RUN $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --version
-
-#RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
 ADD packages.txt /sdk
@@ -57,18 +48,22 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
-COPY Gemfile.lock .
-COPY Gemfile .
+COPY Gemfile Gemfile.lock ./
 # RUN gem install bundle
 RUN gem install bundler:1.17.3
-# RUN bundle install
-RUN bundle update
-RUN bundle install
-
-RUN apt-get update && \
-      apt-get -y install sudo
+RUN bundle update && bundle install 
 
 #install firebase cli
 RUN curl -sL firebase.tools | bash
 
-# RUN fastlane add_plugin firebase_app_distribution
+# install tailscale for networking
+RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+
+RUN apt-get update && apt-get install -y tailscale     
+
+ENV PATH="$PATH:${ANDROID_HOME}/cmdline-tools/latest/bin/"
+
+RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+# RUN chown -R gitpod /sdk
+USER gitpod
