@@ -106,6 +106,9 @@ RUN apt-get install -y jq
 
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
+RUN apt-get install -y python3
+RUN apt install -y chromium
+
 # Create the gitpod user. UID must be 33333.
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
