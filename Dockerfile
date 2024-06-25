@@ -93,7 +93,9 @@ RUN git clone -b 3.22.2 https://github.com/flutter/flutter.git
 #https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
 RUN ./flutter/bin/flutter --version
 
-ENV PATH "$PATH:/home/gitpod/flutter/bin"
+# Adding path: Flutter & Adb
+ENV PATH "$PATH:/home/gitpod/flutter/bin:$ANDROID_HOME/platform-tools/"
+
 # RUN flutter doctor
 RUN flutter --version
 
@@ -106,16 +108,17 @@ RUN apt-get install -y jq
 
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
+# Installing additional apps for development
 RUN apt-get install -y python3
-RUN apt install -y chromium
+# RUN apt install -y chromium
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt update && dpkg -i google-chrome-stable_current_amd64.deb
+RUN rm google-chrome-stable_current_amd64.deb
 
 # Create the gitpod user. UID must be 33333.
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
-RUN chown -R gitpod /home/gitpod/
+# update directory permission
+RUN chown -R gitpod:gitpod /home/gitpod/
 USER gitpod
-
-#update directory permission
-# RUN mkdir -p /root/.pub-cache/
-# RUN chmod -R 775 /root/.pub-cache/
-# RUN chmod -R 775 /workspace/flutter/ 
