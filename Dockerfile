@@ -113,7 +113,7 @@ RUN apt-get install -y python3
 # RUN apt install -y chromium
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt update && dpkg -i google-chrome-stable_current_amd64.deb
+RUN dpkg -i google-chrome-stable_current_amd64.deb
 RUN rm google-chrome-stable_current_amd64.deb
 
 # Create the gitpod user. UID must be 33333.
