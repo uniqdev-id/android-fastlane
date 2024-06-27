@@ -1,4 +1,4 @@
-FROM openjdk:11.0-jdk
+FROM openjdk:17.0-jdk
 
 # Just matched `app/build.gradle` | 33
 ENV ANDROID_COMPILE_SDK "28" 
