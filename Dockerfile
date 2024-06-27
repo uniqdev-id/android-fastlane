@@ -1,124 +1,88 @@
-FROM openjdk:17.0-jdk
+FROM eclipse-temurin:17-jdk-alpine
 
-# Just matched `app/build.gradle` | 33
+# Set environment variables
 ENV ANDROID_COMPILE_SDK "28" 
-# Just matched `app/build.gradle`
 ENV ANDROID_BUILD_TOOLS "29.0.2"
-# Version from https://developer.android.com/studio/releases/sdk-tools
 ENV ANDROID_SDK_TOOLS "24.4.1"
-# ENV VERSION_SDK_TOOLS "4333796" | 7583922_latest | 9123335_latest 
 ENV VERSION_SDK_TOOLS "9123335_latest"
 ENV ANDROID_HOME "/home/gitpod/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
+# Install necessary packages
+RUN apk update && apk add --no-cache \
+    wget \
+    tar \
+    unzip \
+    libstdc++ \
+    build-base \
+    ruby \
+    ruby-dev \
+    vim \
+    sudo \
+    curl \
+    git \
+    python3 \
+    jq \
+    bash \
+    npm
+
 RUN mkdir -p $ANDROID_HOME
 
-# install OS packages
-RUN apt-get --quiet update --yes
-RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
-# We use this for xxd hex->binary
-RUN apt-get --quiet install --yes vim-common
-
-# install Android SDK
-# RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
-#     unzip /sdk.zip -d /sdk && \
-#     rm -v /sdk.zip
-
-#https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+# Install Android SDK
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
-
-# RUN mkdir -p $ANDROID_HOME/licenses/ \
-#   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
-#   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-
+# Set up Android SDK
 RUN mkdir -p $ANDROID_HOME/licenses/
-ADD licenses/* $ANDROID_HOME/licenses/
+COPY licenses/* $ANDROID_HOME/licenses/
 
-#accept licenses
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
-RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
-RUN ls -al $ANDROID_HOME
-RUN mkdir /tools
-RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
-RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
-RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
-
-# RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
+RUN mkdir -p /tmp/android
+RUN cp -r $ANDROID_HOME/cmdline-tools/. /tmp/android/ 
+RUN cp -r /tmp/android/. $ANDROID_HOME/cmdline-tools/latest/
+RUN rm -rf /tmp/android
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-ADD packages.txt $ANDROID_HOME
-# RUN mkdir -p /root/.android && \
-#   touch /root/.android/repositories.cfg && \
-#   ${ANDROID_HOME}/tools/bin/sdkmanager --update
-
+COPY packages.txt $ANDROID_HOME/
 RUN mkdir -p /root/.android && \
-  touch /root/.android/repositories.cfg && \
-  ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --update
-
-# RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
-#     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
+    touch /root/.android/repositories.cfg && \
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
 
 RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID_HOME/packages.txt && \
-    ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
-# install Fastlane
+# Install Fastlane
 RUN gem install bundler
-# COPY Gemfile.lock .
 COPY Gemfile .
-#RUN gem install bundle
-# RUN gem install bundler
-# RUN gem install bundler:1.17.3
 RUN bundle update
-# RUN bundle install
 
-RUN ls -al 
-# COPY Gemfile.lock .
-
-RUN apt-get update && \
-      apt-get -y install sudo
-
-#install firebase cli
-RUN curl -sL firebase.tools | bash
-
-# install plugins
-#RUN fastlane add_plugin firebase_app_distribution
+# Install Firebase CLI
+# RUN curl -sL https://firebase.tools | bash
+RUN npm install -g firebase-tools
 
 # Download Flutter SDK
 WORKDIR /home/gitpod
-#RUN git clone -b stable https://github.com/flutter/flutter.git
 RUN git clone -b 3.22.2 https://github.com/flutter/flutter.git
-#https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
-RUN ./flutter/bin/flutter --version
+# RUN ./flutter/bin/flutter --version
 
 # Adding path: Flutter & Adb
 ENV PATH "$PATH:/home/gitpod/flutter/bin:$ANDROID_HOME/platform-tools/"
 
-# RUN flutter doctor
-RUN flutter --version
+# Install Tailscale (Note: This might not work on Alpine, you may need to find an alternative)
+RUN apk add --no-cache tailscale
 
-# install tailscale for networking
-RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
-RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-
-RUN apt-get update && apt-get install -y tailscale     
-RUN apt-get install -y jq
-
-# ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
-
-# Installing additional apps for development
-RUN apt-get install -y python3
-# RUN apt install -y chromium
-
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN dpkg -i google-chrome-stable_current_amd64.deb
-RUN rm google-chrome-stable_current_amd64.deb
+# Install Chrome (This won't work directly on Alpine, you might need to use Chromium instead)
+# RUN apk add --no-cache chromium
 
 # Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+RUN adduser -D -u 33333 -G wheel -h /home/gitpod -s /bin/bash gitpod && \
+    echo "gitpod ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/gitpod
 
-# update directory permission
-RUN chown -R gitpod:gitpod /home/gitpod/
+# Update directory permission
+RUN chown -R gitpod /home/gitpod/
+
 USER gitpod
+
+# Set default command
+CMD ["/bin/bash"]
