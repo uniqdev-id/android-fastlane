@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jdk-alpine
+FROM eclipse-temurin:17-jdk-alpine
 
 # Set environment variables
 ENV ANDROID_COMPILE_SDK "28" 
@@ -76,11 +76,11 @@ RUN apk add --no-cache tailscale
 # RUN apk add --no-cache chromium
 
 # Create the gitpod user. UID must be 33333.
-RUN adduser -D -u 33333 -G wheel -h /home/gitpod -s /bin/bash gitpod && \
+RUN adduser -D -u 33333 -G wheel -h /home/gitpod -s /bin/bash gitpod && addgroup -g 33333 gitpod && \
     echo "gitpod ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/gitpod
 
 # Update directory permission
-RUN chown -R gitpod /home/gitpod/
+RUN chown -R gitpod:gitpod /home/gitpod/
 
 USER gitpod
 
