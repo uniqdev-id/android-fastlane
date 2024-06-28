@@ -67,7 +67,7 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID
 # install Fastlane
 RUN gem install bundler
 COPY Gemfile .
-RUN bundle update
+# RUN bundle update
 
 #install firebase cli
 RUN curl -sL firebase.tools | bash
