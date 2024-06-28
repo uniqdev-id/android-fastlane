@@ -89,9 +89,5 @@ RUN apt-get install -y jq
 
 ENV PATH="$PATH:/home/gitpod/flutter/bin:/home/gitpod/sdk/platform-tools"
 
-# Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
-
 RUN chown -R gitpod /home/gitpod/
 USER gitpod    
-# 11.0.23    
