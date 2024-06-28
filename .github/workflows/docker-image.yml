@@ -2,9 +2,9 @@ name: Release Docker Image
 
 on:
   push:
-    branches: [ flutter-gitpod ]
+    branches: [ flutter-gitpod-vnc ]
   pull_request:
-    branches: [ flutter-gitpod ]
+    branches: [ flutter-gitpod-vnc ]
 
 jobs:
 
@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./Dockerfile.vnc
           push: true
-          tags: uniqdev/android-fastlane:flutter-gitpod-jdk11-3.19.6
+          tags: uniqdev/android-fastlane:flutter-gitpod-vnc-jdk11-3.22.2
 

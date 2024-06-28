@@ -1,4 +1,20 @@
-FROM openjdk:11.0-jdk
+FROM gitpod/workspace-full-vnc:2024-06-26-08-49-45
+
+ENV CYPRESS_CACHE_FOLDER=/workspace/.cypress-cache
+
+# Install Cypress dependencies
+RUN sudo apt-get update \
+    && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libgtk2.0-0 \
+    libgtk-3-0 \
+    libnotify-dev \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    xauth \
+    xvfb \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Just matched `app/build.gradle` | 33
 ENV ANDROID_COMPILE_SDK "28" 
@@ -29,11 +45,6 @@ RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VE
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
-
-# RUN mkdir -p $ANDROID_HOME/licenses/ \
-#   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
-#   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-
 RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses/
 
@@ -46,36 +57,19 @@ RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
 RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
 RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
 
-# RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
 ADD packages.txt $ANDROID_HOME
-# RUN mkdir -p /root/.android && \
-#   touch /root/.android/repositories.cfg && \
-#   ${ANDROID_HOME}/tools/bin/sdkmanager --update
-
 RUN mkdir -p /root/.android && \
   touch /root/.android/repositories.cfg && \
   ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --update
-
-# RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /workspace/sdk/packages.txt && \
-#     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
-
 RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID_HOME/packages.txt && \
     ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
 
 # install Fastlane
 RUN gem install bundler
-# COPY Gemfile.lock .
 COPY Gemfile .
-#RUN gem install bundle
-# RUN gem install bundler
-# RUN gem install bundler:1.17.3
 RUN bundle update
-# RUN bundle install
-
-RUN ls -al 
-# COPY Gemfile.lock .
 
 RUN apt-get update && \
       apt-get -y install sudo
@@ -88,14 +82,7 @@ RUN curl -sL firebase.tools | bash
 
 # Download Flutter SDK
 WORKDIR /home/gitpod
-#RUN git clone -b stable https://github.com/flutter/flutter.git
 RUN git clone -b 3.22.2 https://github.com/flutter/flutter.git
-#https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_2.2.3-stable.tar.xz
-RUN ./flutter/bin/flutter --version
-
-ENV PATH "$PATH:/home/gitpod/flutter/bin"
-# RUN flutter doctor
-RUN flutter --version
 
 # install tailscale for networking
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
@@ -104,15 +91,10 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyri
 RUN apt-get update && apt-get install -y tailscale     
 RUN apt-get install -y jq
 
-# ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
+ENV PATH="$PATH:/home/gitpod/flutter/bin:/home/gitpod/sdk/platform-tools"
 
 # Create the gitpod user. UID must be 33333.
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
 RUN chown -R gitpod /home/gitpod/
-USER gitpod
-
-#update directory permission
-# RUN mkdir -p /root/.pub-cache/
-# RUN chmod -R 775 /root/.pub-cache/
-# RUN chmod -R 775 /workspace/flutter/ 
+USER gitpod    
