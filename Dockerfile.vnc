@@ -16,6 +16,8 @@ RUN sudo apt-get update \
     xvfb \
     && sudo rm -rf /var/lib/apt/lists/*
 
+USER root    
+
 # Just matched `app/build.gradle` | 33
 ENV ANDROID_COMPILE_SDK "28" 
 # Just matched `app/build.gradle`
@@ -92,5 +94,5 @@ ENV PATH="$PATH:/home/gitpod/flutter/bin:/home/gitpod/sdk/platform-tools"
 # Create the gitpod user. UID must be 33333.
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
-# RUN chown -R gitpod /home/gitpod/
+RUN chown -R gitpod /home/gitpod/
 USER gitpod    
