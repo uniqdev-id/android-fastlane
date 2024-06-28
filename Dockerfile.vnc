@@ -16,6 +16,7 @@ RUN sudo apt-get update \
     xvfb \
     && sudo rm -rf /var/lib/apt/lists/*
 
+ENV JAVA_HOME="/home/gitpod/.sdkman/candidates/java/11.0.23.fx-zulu"
 USER root    
 
 # Just matched `app/build.gradle` | 33
@@ -32,10 +33,10 @@ ENV PATH "$PATH:${ANDROID_HOME}/tools"
 RUN mkdir -p $ANDROID_HOME
 
 # install OS packages
-RUN sudo apt-get --quiet update --yes
-RUN sudo apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
+RUN apt-get --quiet update --yes
+RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
 # We use this for xxd hex->binary
-RUN sudo apt-get --quiet install --yes vim-common
+RUN apt-get --quiet install --yes vim-common
 
 #https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
@@ -68,9 +69,6 @@ RUN gem install bundler
 COPY Gemfile .
 RUN bundle update
 
-RUN sudo apt-get update && \
-      sudo apt-get -y install sudo
-
 #install firebase cli
 RUN curl -sL firebase.tools | bash
 
@@ -86,8 +84,8 @@ RUN git clone -b 3.22.2 https://github.com/flutter/flutter.git
 # RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
 RUN curl -fsSL https://tailscale.com/install.sh | sh
 
-RUN sudo apt-get update && apt-get install -y tailscale     
-RUN sudo apt-get install -y jq
+RUN apt-get update && apt-get install -y tailscale     
+RUN apt-get install -y jq
 
 ENV PATH="$PATH:/home/gitpod/flutter/bin:/home/gitpod/sdk/platform-tools"
 
@@ -96,3 +94,4 @@ RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
 RUN chown -R gitpod /home/gitpod/
 USER gitpod    
+# 11.0.23    
