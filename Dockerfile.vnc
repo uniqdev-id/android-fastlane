@@ -1,7 +1,30 @@
 FROM gitpod/workspace-java-11:2024-06-26-08-49-45
 
 ENV JAVA_HOME "/home/gitpod/.sdkman/candidates/java/current"
+
 USER root    
+
+# install vnc
+RUN install-packages \
+	tigervnc-standalone-server tigervnc-xorg-extension \
+	dbus dbus-x11 gnome-keyring xfce4 xfce4-terminal \
+	xdg-utils x11-xserver-utils pip
+
+# Install novnc and numpy module for it
+RUN git clone --depth 1 https://github.com/novnc/noVNC.git /opt/novnc \
+	&& git clone --depth 1 https://github.com/novnc/websockify /opt/novnc/utils/websockify \
+	&& find /opt/novnc -type d -name '.git' -exec rm -rf '{}' + \
+	&& sudo -H pip3 install numpy
+COPY novnc-index.html /opt/novnc/index.html
+
+# Add VNC startup script
+COPY gp-vncsession /usr/bin/
+RUN chmod 0755 /usr/bin/gp-vncsession \
+	&& printf '%s\n' 'export DISPLAY=:0' \
+	'test -e "$GITPOD_REPO_ROOT" && /usr/bin/gp-vncsession' >> "$HOME/.bashrc"
+
+# Add X11 dotfiles
+COPY --chown=gitpod:gitpod .xinitrc $HOME/    
 
 # Just matched `app/build.gradle` | 33
 ENV ANDROID_COMPILE_SDK "28" 
@@ -29,10 +52,10 @@ RUN mkdir -p $ANDROID_HOME/licenses/
 ADD licenses/* $ANDROID_HOME/licenses/
 
 #accept licenses
-RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest && mkdir /tools
 RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
-RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
-RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest && mkdir /tools
+RUN mv $ANDROID_HOME/cmdline-tools/* /tools/
+RUN mv /tools/* $ANDROID_HOME/cmdline-tools/latest/
 
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
@@ -51,8 +74,6 @@ RUN bundle update
 #install firebase cli
 RUN curl -sL firebase.tools | bash
 
-# install plugins
-#RUN fastlane add_plugin firebase_app_distribution
 
 # Download Flutter SDK
 WORKDIR /home/gitpod
@@ -61,4 +82,4 @@ RUN git clone -b 3.22.2 https://github.com/flutter/flutter.git
 ENV PATH="$PATH:/home/gitpod/flutter/bin:/home/gitpod/sdk/platform-tools"
 
 RUN chown -R gitpod /home/gitpod/
-USER gitpod    
+USER gitpod 
