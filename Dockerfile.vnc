@@ -53,8 +53,9 @@ ADD licenses/* $ANDROID_HOME/licenses/
 
 #accept licenses
 RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
-RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest && mkdir /tools
+RUN mkdir /tools
 RUN mv $ANDROID_HOME/cmdline-tools/* /tools/
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
 RUN mv /tools/* $ANDROID_HOME/cmdline-tools/latest/
 
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
