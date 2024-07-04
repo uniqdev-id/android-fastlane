@@ -2,7 +2,7 @@
 FROM debian:buster-slim
 
 #11.0.23.9-1 | 17.0.11.9-1
-ARG version=17.0.11.9-1
+ARG version=11.0.23.9-1
 RUN set -eux \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
