@@ -148,6 +148,9 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyri
 RUN apt-get update && apt-get install -y tailscale     
 RUN apt-get install -y jq
 
+COPY pair.sh /usr/bin/pair
+RUN chmod 0755 /usr/bin/pair
+
 # ENV PATH="${PATH}:/workspace/flutter/bin:/workspace/sdk/platform-tools"
 
 # Installing additional apps for development
