@@ -1,5 +1,6 @@
 FROM selenium/standalone-chrome:4.22.0-20240621
 
+RUN echo $(whoami)
 USER root
 
 # install tailscale for networking
@@ -68,4 +69,7 @@ RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
 # update directory permission
 RUN chown -R gitpod:gitpod /home/gitpod/
-USER gitpod
+# USER gitpod
+
+#uid=1200(seluser) gid=1201(seluser) groups=1201(seluser),27(sudo)
+USER seluser
