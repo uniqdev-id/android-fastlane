@@ -2,9 +2,9 @@ name: Release Docker Image
 
 on:
   push:
-    branches: [ flutter-gitpod ]
+    branches: [ flutter-gitpod-selenium ]
   pull_request:
-    branches: [ flutter-gitpod ]
+    branches: [ flutter-gitpod-selenium ]
 
 jobs:
 
@@ -29,5 +29,5 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: uniqdev/android-fastlane:flutter-gitpod-jdk11-3.22.2
+          tags: uniqdev/android-fastlane:flutter-gitpod-selenium-jdk17-3.22.3
 
