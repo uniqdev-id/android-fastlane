@@ -63,7 +63,7 @@ RUN npm install -g firebase-tools
 
 # Download Flutter SDK
 WORKDIR /home/gitpod
-RUN git clone -b 3.22.3 https://github.com/flutter/flutter.git
+RUN git clone -b 3.24.0 https://github.com/flutter/flutter.git
 # RUN ./flutter/bin/flutter --version
 
 # Adding path: Flutter & Adb
