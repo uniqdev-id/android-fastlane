@@ -50,7 +50,7 @@ RUN mkdir -p /root/.android && \
     $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
 
 RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID_HOME/packages.txt && \
-    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install ${PACKAGES}
 
 # Install Fastlane
 RUN gem install bundler
@@ -90,4 +90,4 @@ RUN chown -R gitpod:gitpod /home/gitpod/
 USER gitpod
 
 # Set default command
-CMD ["/bin/bash"]
+# CMD ["/bin/bash"]
