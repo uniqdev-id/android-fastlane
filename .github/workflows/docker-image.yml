@@ -2,9 +2,9 @@ name: Release Docker Image
 
 on:
   push:
-    branches: [ flutter-gitpod-17 ]
+    branches: [ android-jdk17 ]
   pull_request:
-    branches: [ flutter-gitpod-17 ]
+    branches: [ android-jdk17 ]
 
 jobs:
 
