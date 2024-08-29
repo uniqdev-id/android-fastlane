@@ -2,9 +2,9 @@ name: Release Docker Image
 
 on:
   push:
-    branches: [ android-jdk17 ]
+    branches: [ android-jdk17-alpine ]
   pull_request:
-    branches: [ android-jdk17 ]
+    branches: [ android-jdk17-alpine ]
 
 jobs:
 
@@ -29,5 +29,5 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: uniqdev/android-fastlane:android-jdk17
+          tags: uniqdev/android-fastlane:android-jdk17-alpine
 
