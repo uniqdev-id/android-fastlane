@@ -58,5 +58,5 @@ COPY Gemfile .
 RUN bundle update
 
 # Install Firebase CLI
-# RUN curl -sL https://firebase.tools | bash
+# RUN curl -sL https://firebase.tools | bash 
 RUN npm install -g firebase-tools
