@@ -14,6 +14,7 @@ RUN apk add --no-cache tailscale
 # Install Chrome (This won't work directly on Alpine, you might need to use Chromium instead)
 # RUN apk add --no-cache chromium
 
+
 # Terminal 
 RUN apk update && apk add zsh && apk add git
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
