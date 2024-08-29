@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 
 # Set environment variables
 ENV ANDROID_COMPILE_SDK "28" 
