@@ -9,7 +9,7 @@ RUN apt-get --quiet install --yes vim-common
 
 # https://developer.android.com/studio#cmdline-tools
 # ENV VERSION_SDK_TOOLS "7583922_latest"
-ENV VERSION_SDK_TOOLS "11076708_latest"
+ENV VERSION_SDK_TOOLS "9123335_latest"
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
