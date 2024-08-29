@@ -9,16 +9,7 @@ RUN git clone -b 3.24.1 https://github.com/flutter/flutter.git
 ENV PATH "$PATH:/home/gitpod/flutter/bin:$ANDROID_HOME/platform-tools/"
 
 # Install Tailscale (Note: This might not work on Alpine, you may need to find an alternative)
-RUN apk add --no-cache tailscale
-
-# Install Chrome (This won't work directly on Alpine, you might need to use Chromium instead)
-# RUN apk add --no-cache chromium
-
-
-# Terminal 
-RUN apk update && apk add zsh && apk add git
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN apt-get update && apt-get install -y tailscale 
 
 # Create the gitpod user. UID must be 33333.
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
@@ -27,6 +18,3 @@ RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 RUN chown -R gitpod:gitpod /home/gitpod/
 
 USER gitpod
-
-# Set default command
-# CMD ["/bin/bash"]
