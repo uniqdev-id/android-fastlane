@@ -9,22 +9,19 @@ ENV ANDROID_HOME "/home/gitpod/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 # Install necessary packages
-RUN apk update && apk add --no-cache \
-    wget \
+RUN apt-get --quiet update --yes
+RUN apt-get --quiet install --yes wget \
     tar \
     unzip \
-    libstdc++ \
-    build-base \
+    lib32stdc++6 \
+    lib32z1 \
+    build-essential \
     ruby \
     ruby-dev \
-    vim \
-    sudo \
-    curl \
-    git \
-    python3 \
+    npm \
+    vim-common \
     jq \
-    bash \
-    npm
+    sudo
 
 RUN mkdir -p $ANDROID_HOME
 
