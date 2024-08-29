@@ -13,42 +13,31 @@ ENV VERSION_SDK_TOOLS "11076708_latest"
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
-# install Android SDK
-# RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
-#     unzip /sdk.zip -d /sdk && \
-#     rm -v /sdk.zip
+RUN mkdir -p $ANDROID_HOME
+
+# Install Android SDK
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
-    unzip /sdk.zip -d /sdk && \
+    unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
-# RUN mkdir -p $ANDROID_HOME/licenses/ \
-#   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license \
-#   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-
+# Set up Android SDK
 RUN mkdir -p $ANDROID_HOME/licenses/
-ADD licenses/* $ANDROID_HOME/licenses
+COPY licenses/* $ANDROID_HOME/licenses/
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
-RUN cp -r $ANDROID_HOME/licenses/. $ANDROID_HOME
-RUN ls -al $ANDROID_HOME
-RUN mkdir /tools
-RUN cp -r $ANDROID_HOME/cmdline-tools/. /tools/
-RUN cp -r /tools/. $ANDROID_HOME/cmdline-tools/latest/
-RUN ls -al $ANDROID_HOME/cmdline-tools/latest/bin
-
-RUN echo "Print sdkmanager version"
-RUN $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --version
-
-#RUN yes | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-28"
+RUN mkdir -p /tmp/android
+RUN cp -r $ANDROID_HOME/cmdline-tools/. /tmp/android/ 
+RUN cp -r /tmp/android/. $ANDROID_HOME/cmdline-tools/latest/
+RUN rm -rf /tmp/android
 RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-ADD packages.txt /sdk
+COPY packages.txt $ANDROID_HOME/
 RUN mkdir -p /root/.android && \
-  touch /root/.android/repositories.cfg && \
-  ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --update
+    touch /root/.android/repositories.cfg && \
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
 
-RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
-    ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager ${PACKAGES}
+RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < $ANDROID_HOME/packages.txt && \
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install ${PACKAGES}
 
 # install Fastlane
 COPY Gemfile.lock .
