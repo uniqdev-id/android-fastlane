@@ -1,23 +1,17 @@
 #openjdk:8-jdk
 FROM openjdk:11.0-jdk
 
-# Just matched `app/build.gradle`
-ENV ANDROID_COMPILE_SDK "28"
-# Just matched `app/build.gradle`
-ENV ANDROID_BUILD_TOOLS "29.0.2"
-# Version from https://developer.android.com/studio/releases/sdk-tools
-ENV ANDROID_SDK_TOOLS "24.4.1"
-#4333796
-ENV VERSION_SDK_TOOLS "7583922_latest"
-ENV ANDROID_HOME "/sdk"
-ENV PATH "$PATH:${ANDROID_HOME}/tools"
-
-
 # install OS packages
 RUN apt-get --quiet update --yes
 RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1 build-essential ruby ruby-dev
 # We use this for xxd hex->binary
 RUN apt-get --quiet install --yes vim-common
+
+# https://developer.android.com/studio#cmdline-tools
+# ENV VERSION_SDK_TOOLS "7583922_latest"
+ENV VERSION_SDK_TOOLS "11076708_latest"
+ENV ANDROID_HOME "/sdk"
+ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 # install Android SDK
 # RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
