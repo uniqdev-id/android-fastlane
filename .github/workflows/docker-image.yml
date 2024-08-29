@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ flutter ]
+    branches: [ flutter-jdk17 ]
   pull_request:
-    branches: [ flutter ]
+    branches: [ flutter-jdk17 ]
 
 jobs:
 
@@ -33,4 +33,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: uniqdev/android-fastlane:flutter-jdk11-3.24.1
+          tags: uniqdev/android-fastlane:flutter-jdk17-3.24.1

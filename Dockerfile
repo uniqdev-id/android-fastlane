@@ -1,4 +1,4 @@
-FROM uniqdev/android-fastlane:jdk-11
+FROM uniqdev/android-fastlane:android-jdk17
 
 
 # Download Flutter SDK
