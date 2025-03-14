@@ -6,7 +6,7 @@ RUN git clone -b 3.29.2 https://github.com/flutter/flutter.git
 # RUN ./flutter/bin/flutter --version
 
 # Install shorebird
-curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
+RUN curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
 
 # Adding path: Flutter & Adb
 ENV PATH "$PATH:/home/gitpod/flutter/bin:$ANDROID_HOME/platform-tools/"
