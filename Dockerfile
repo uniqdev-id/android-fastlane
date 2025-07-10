@@ -1,15 +1,13 @@
 FROM uniqdev/android-fastlane:android-jdk17
 
+COPY debug.sh /user/local/bin/
+RUN chmod +x /user/local/bin/debug.sh
+
 # Download Flutter SDK
 WORKDIR /home/gitpod
-RUN git clone -b 3.29.2 https://github.com/flutter/flutter.git
-# RUN ./flutter/bin/flutter --version
-
-# Install shorebird
-RUN curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
 
 # Adding path: Flutter & Adb
-ENV PATH "$PATH:/home/gitpod/flutter/bin:$ANDROID_HOME/platform-tools/"
+ENV PATH "$PATH:$ANDROID_HOME/platform-tools/"
 
 # install tailscale for networking
 RUN curl -fsSL https://tailscale.com/install.sh | sh
