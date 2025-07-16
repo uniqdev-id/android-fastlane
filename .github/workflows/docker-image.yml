@@ -29,5 +29,5 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: uniqdev/android-fastlane:flutter-gitpod-jdk17-3.29.2
+          tags: uniqdev/android-fastlane:flutter-gitpod-jdk17-3.32.6
 

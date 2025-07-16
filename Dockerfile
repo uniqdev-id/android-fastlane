@@ -2,7 +2,7 @@ FROM uniqdev/android-fastlane:android-jdk17
 
 # Download Flutter SDK
 WORKDIR /home/gitpod
-RUN git clone -b 3.29.2 https://github.com/flutter/flutter.git
+RUN git clone -b 3.32.6 https://github.com/flutter/flutter.git
 # RUN ./flutter/bin/flutter --version
 
 # Install shorebird
